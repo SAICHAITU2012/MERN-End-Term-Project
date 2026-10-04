@@ -38,11 +38,13 @@ export const tick = async () => {
         try {
             const { dateLabel, timeLabel, dayOfWeek } = nowInTz(family.timezone);
 
-            // 1 ── materialise due doses ────────────────────────────────
+            // 1 ── materialise due doses (self-healing: any of today's
+            //      slots that have passed but aren't materialised yet get
+            //      created, so server restarts never drop a dose; the
+            //      unique index keeps this idempotent) ──────────────────
             const meds = await Medication.find({
                 family: family._id,
                 active: true,
-                doseTimes: timeLabel,
             }).lean();
 
             const memberIds = new Set(
@@ -54,22 +56,34 @@ export const tick = async () => {
                 if (!memberIds.has(String(med.member))) continue;
                 if (!med.daysOfWeek.includes(dayOfWeek)) continue;
 
-                const startDate = med.startDate ? new Date(med.startDate) : null;
-                if (startDate && zonedToUtc(dateLabel, timeLabel, family.timezone) < startDate) continue;
-                if (med.endDate && new Date(med.endDate) < zonedToUtc(dateLabel, timeLabel, family.timezone)) continue;
+                // dose slots are minute-resolution, so compare "already
+                // existed" at minute granularity too
+                const toMinute = (d) => { const x = new Date(d); x.setSeconds(0, 0); return x.getTime(); };
+                const createdSince = Math.max(
+                    toMinute(med.createdAt),
+                    med.startDate ? toMinute(med.startDate) : 0
+                );
 
-                const created = await DoseEvent.create({
-                    family: family._id,
-                    member: med.member,
-                    medication: med._id,
-                    dateLabel,
-                    timeLabel,
-                    scheduledFor: zonedToUtc(dateLabel, timeLabel, family.timezone),
-                }).catch((err) => {
-                    if (err.code === 11000) return null; // already exists — idempotent
-                    throw err;
-                });
-                if (created) result.dosesCreated += 1;
+                for (const slot of med.doseTimes) {
+                    if (slot > timeLabel) continue; // not due yet today
+                    const scheduledFor = zonedToUtc(dateLabel, slot, family.timezone);
+                    // a medication added mid-day doesn't owe earlier slots
+                    if (scheduledFor.getTime() < createdSince) continue;
+                    if (med.endDate && new Date(med.endDate) < scheduledFor) continue;
+
+                    const created = await DoseEvent.create({
+                        family: family._id,
+                        member: med.member,
+                        medication: med._id,
+                        dateLabel,
+                        timeLabel: slot,
+                        scheduledFor,
+                    }).catch((err) => {
+                        if (err.code === 11000) return null; // already exists — idempotent
+                        throw err;
+                    });
+                    if (created) result.dosesCreated += 1;
+                }
             }
 
             // 2 ── escalate overdue pending doses ───────────────────────
