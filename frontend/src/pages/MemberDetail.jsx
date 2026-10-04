@@ -40,7 +40,7 @@ export default function MemberDetail() {
     };
 
     return (
-        <div className="animate-rise space-y-6">
+        <div className="space-y-6">
             {/* header */}
             <div className="flex flex-wrap items-center gap-5 rounded-3xl border border-stone-100 bg-white p-6 shadow-card">
                 <Avatar name={report.member.name} src={report.member.avatar} size={72} />

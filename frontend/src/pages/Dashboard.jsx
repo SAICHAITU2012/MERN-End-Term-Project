@@ -54,7 +54,7 @@ export default function Dashboard() {
     ];
 
     return (
-        <div className="animate-rise space-y-6">
+        <div className="space-y-6">
             {/* gradient hero band */}
             <section className="ring-gradient relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-brand-900 via-brand-800 to-brand-700 p-7 text-white shadow-pop sm:p-9">
                 <div className="absolute -right-16 -top-20 h-64 w-64 rounded-full bg-gradient-to-br from-violet-500/30 to-fuchsia-500/20 blur-2xl" />
