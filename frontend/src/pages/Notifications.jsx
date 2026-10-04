@@ -25,7 +25,7 @@ export default function Notifications() {
         <div className="animate-rise space-y-6">
             <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
-                    <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">Notifications</h1>
+                    <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Notifications</h1>
                     <p className="mt-1 text-sm text-stone-500">Escalations, refill alerts and weekly digests for your family.</p>
                 </div>
                 {items.some((n) => !n.isRead) && (

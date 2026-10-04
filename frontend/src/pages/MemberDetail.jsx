@@ -45,7 +45,7 @@ export default function MemberDetail() {
             <div className="flex flex-wrap items-center gap-5 rounded-3xl border border-stone-100 bg-white p-6 shadow-card">
                 <Avatar name={report.member.name} src={report.member.avatar} size={72} />
                 <div className="min-w-0 flex-1">
-                    <h1 className="text-2xl font-extrabold tracking-tight">{report.member.name}</h1>
+                    <h1 className="font-display text-2xl font-extrabold tracking-tight">{report.member.name}</h1>
                     <p className="mt-0.5 text-sm text-stone-500">
                         {[report.member.age && `${report.member.age} yrs`, report.member.gender, report.member.conditions].filter(Boolean).join(" · ") || "Family member"}
                     </p>

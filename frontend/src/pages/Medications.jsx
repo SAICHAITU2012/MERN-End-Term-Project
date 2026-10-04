@@ -62,12 +62,12 @@ export default function Medications() {
         <div className="animate-rise space-y-6">
             <div className="flex flex-wrap items-end justify-between gap-3">
                 <div>
-                    <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">Medications</h1>
+                    <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Medications</h1>
                     <p className="mt-1 text-sm text-stone-500">{active.length} active · MedMate reminds, tracks stock and escalates misses</p>
                 </div>
                 {isCaregiver && members.length > 0 && (
                     <button onClick={() => setModal({ mode: "add" })}
-                        className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-bold text-white shadow-pop transition hover:bg-brand-700">
+                        className="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-emerald-600 px-5 py-2.5 text-sm font-extrabold text-white shadow-pop transition hover:brightness-110">
                         <PlusIcon size={16} /> Add medication
                     </button>
                 )}
@@ -80,7 +80,7 @@ export default function Medications() {
                     emoji="💊"
                     title="No medications yet"
                     body="Add the first medicine with its dose times — MedMate starts watching the clock, the stock and the confirmations."
-                    action={isCaregiver && <button onClick={() => setModal({ mode: "add" })} className="rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-bold text-white">Add medication</button>}
+                    action={isCaregiver && <button onClick={() => setModal({ mode: "add" })} className="rounded-xl bg-gradient-to-r from-brand-600 to-emerald-600 px-5 py-2.5 text-sm font-extrabold text-white">Add medication</button>}
                 />
             )}
 
@@ -94,7 +94,7 @@ export default function Medications() {
                                 <div className="min-w-0 flex-1">
                                     <div className="flex items-start justify-between gap-2">
                                         <div className="min-w-0">
-                                            <p className="truncate font-bold">{med.name}</p>
+                                            <p className="truncate font-display text-base font-extrabold">{med.name}</p>
                                             <p className="text-sm text-stone-500">{med.dosage || "1 dose"}</p>
                                         </div>
                                         {low && (
@@ -190,7 +190,7 @@ export default function Medications() {
                         </button>
                     ))}
                 </div>
-                <button onClick={refill} className="mt-5 w-full rounded-xl bg-brand-600 py-3.5 text-sm font-bold text-white shadow-pop hover:bg-brand-700">
+                <button onClick={refill} className="btn-shine mt-5 w-full rounded-xl bg-gradient-to-r from-brand-600 to-emerald-600 py-3.5 text-sm font-extrabold text-white shadow-pop hover:brightness-110">
                     Add {refillQty} doses
                 </button>
             </Modal>

@@ -41,8 +41,8 @@ export default function Onboarding() {
     return (
         <div className="flex min-h-screen flex-col bg-paper">
             <header className="mx-auto flex h-16 w-full max-w-3xl items-center gap-2 px-5">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-600 text-white"><PillIcon size={18} /></span>
-                <span className="text-lg font-extrabold">MedMate</span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 to-emerald-500 text-white shadow-pop"><PillIcon size={18} /></span>
+                <span className="font-display text-lg font-extrabold">MedMate</span>
             </header>
 
             <main className="mx-auto w-full max-w-3xl flex-1 px-5 pb-16">
@@ -50,7 +50,7 @@ export default function Onboarding() {
                 <div className="mb-8 flex items-center gap-3">
                     {["Add a family member", "Add their first medication", "You're set"].map((label, i) => (
                         <div key={label} className="flex flex-1 flex-col gap-2">
-                            <div className={`h-1.5 rounded-full transition-all ${step > i ? "bg-brand-600" : "bg-stone-200"}`} />
+                            <div className={`h-1.5 rounded-full transition-all ${step > i ? "bg-gradient-to-r from-brand-500 to-emerald-500" : "bg-stone-200"}`} />
                             <span className={`text-xs font-bold ${step > i ? "text-brand-700" : "text-stone-400"}`}>{label}</span>
                         </div>
                     ))}
@@ -58,7 +58,7 @@ export default function Onboarding() {
 
                 {step === 1 && (
                     <div className="animate-rise rounded-3xl border border-stone-100 bg-white p-7 shadow-card sm:p-9">
-                        <h1 className="text-2xl font-extrabold">Who are you caring for?</h1>
+                        <h1 className="font-display text-2xl font-extrabold">Who are you caring for?</h1>
                         <p className="mt-1.5 text-sm text-stone-500">
                             Add the person whose medicines MedMate will watch over. You can add more family members later.
                         </p>
@@ -85,7 +85,7 @@ export default function Onboarding() {
                                     className="mt-1.5 w-full rounded-xl border border-stone-300 px-4 py-3 text-sm outline-none focus:border-brand-600 focus:ring-4 focus:ring-brand-100" />
                             </label>
                             <button disabled={busy}
-                                className="w-full rounded-xl bg-brand-600 py-3.5 text-sm font-bold text-white shadow-pop transition hover:bg-brand-700 disabled:opacity-60">
+                                className="btn-shine w-full rounded-xl bg-gradient-to-r from-brand-600 to-emerald-600 py-3.5 text-sm font-extrabold text-white shadow-pop transition hover:brightness-110 disabled:opacity-60">
                                 {busy ? "Adding…" : "Continue →"}
                             </button>
                         </form>
@@ -94,7 +94,7 @@ export default function Onboarding() {
 
                 {step === 2 && (
                     <div className="animate-rise rounded-3xl border border-stone-100 bg-white p-7 shadow-card sm:p-9">
-                        <h1 className="text-2xl font-extrabold">{createdMember?.name}'s first medication</h1>
+                        <h1 className="font-display text-2xl font-extrabold">{createdMember?.name}&apos;s first medication</h1>
                         <p className="mt-1.5 text-sm text-stone-500">
                             Set the dose times — MedMate will fire reminders exactly on schedule in {family?.timezone?.replace("_", " ")}.
                         </p>
@@ -110,7 +110,7 @@ export default function Onboarding() {
                 {step === 3 && (
                     <div className="animate-rise rounded-3xl border border-brand-100 bg-white p-9 text-center shadow-card">
                         <span className="text-5xl">🎉</span>
-                        <h1 className="mt-4 text-2xl font-extrabold">Your care circle is live!</h1>
+                        <h1 className="mt-4 font-display text-2xl font-extrabold">Your care circle is live!</h1>
                         <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-stone-500">
                             MedMate now reminds <strong>{createdMember?.name}</strong> on schedule, alerts you if a dose goes
                             unconfirmed, and tracks the medicine stock. Check the dashboard — today's doses are already queued up.
@@ -120,7 +120,7 @@ export default function Onboarding() {
                             <p className="mt-1">Enable browser notifications when prompted, so dose reminders pop up even in another tab.</p>
                         </div>
                         <button onClick={() => finish()}
-                            className="mt-7 w-full rounded-xl bg-brand-600 py-3.5 text-sm font-bold text-white shadow-pop transition hover:bg-brand-700 sm:w-auto sm:px-10">
+                            className="btn-shine mt-7 w-full rounded-xl bg-gradient-to-r from-brand-600 to-emerald-600 py-3.5 text-sm font-extrabold text-white shadow-pop transition hover:brightness-110 sm:w-auto sm:px-10">
                             Go to my dashboard →
                         </button>
                     </div>

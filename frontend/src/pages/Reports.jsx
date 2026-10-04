@@ -39,11 +39,11 @@ export default function Reports() {
         <div className="animate-rise space-y-6">
             <div className="no-print flex flex-wrap items-end justify-between gap-3">
                 <div>
-                    <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">Doctor-visit report</h1>
+                    <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Doctor-visit report</h1>
                     <p className="mt-1 text-sm text-stone-500">Adherence summary you can print or save as PDF and carry along.</p>
                 </div>
                 <button onClick={() => window.print()}
-                    className="inline-flex items-center gap-2 rounded-xl bg-ink px-5 py-2.5 text-sm font-bold text-white hover:bg-stone-700">
+                    className="btn-shine inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-emerald-600 px-5 py-2.5 text-sm font-extrabold text-white shadow-pop transition hover:brightness-110">
                     <ClipboardIcon size={16} /> Print / Save PDF
                 </button>
             </div>
@@ -70,7 +70,7 @@ export default function Reports() {
                 <div className="space-y-6 rounded-3xl border border-stone-200 bg-white p-6 shadow-card sm:p-8">
                     <div className="flex flex-wrap items-center justify-between gap-4 border-b border-stone-100 pb-5">
                         <div>
-                            <h2 className="text-xl font-extrabold">{report.member.name} — adherence report</h2>
+                            <h2 className="font-display text-xl font-extrabold">{report.member.name} — adherence report</h2>
                             <p className="mt-1 text-sm text-stone-500">
                                 {family?.name} · {report.from} → {report.to} · generated {new Date().toLocaleDateString("en-IN")}
                             </p>

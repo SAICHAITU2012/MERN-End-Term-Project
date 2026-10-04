@@ -98,7 +98,7 @@ export default function Settings() {
 
     return (
         <div className="animate-rise space-y-6">
-            <h1 className="text-2xl font-extrabold tracking-tight sm:text-3xl">Settings</h1>
+            <h1 className="font-display text-2xl font-extrabold tracking-tight sm:text-3xl">Settings</h1>
 
             <div className="grid gap-6 lg:grid-cols-2">
                 {/* profile */}
