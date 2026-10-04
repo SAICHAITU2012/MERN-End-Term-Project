@@ -214,6 +214,22 @@ assert.equal(famReport.status, 200);
 assert.ok(Array.isArray(famReport.data.summaries));
 step("adherence report (30d) + family snapshot computed");
 
+// member scoping: a second member's doses are invisible to the first member
+const mom = await api("POST", "/api/family/members", { as: "cg@test.dev", body: { name: "Test Mom" } });
+assert.equal(mom.status, 201);
+await api("POST", "/api/medications", {
+    as: "cg@test.dev",
+    body: { memberId: mom.data.member._id, name: "Mom Only Med", doseTimes: ["08:00"], stockCount: 10 },
+});
+await tick();
+const dadToday = await api("GET", "/api/doses/today", { as: "dad@test.dev" });
+assert.equal(dadToday.status, 200);
+assert.ok(!dadToday.data.doses.some((d) => d.medication.name === "Mom Only Med"), "member must not see another member's doses");
+const momId = mom.data.member._id;
+const dadReportForbidden = await api("GET", `/api/reports/member/${momId}`, { as: "dad@test.dev" });
+assert.equal(dadReportForbidden.status, 403, "member must not read another member's report");
+step("member scoped to own doses + own report only");
+
 // ── 8. family-scoped security: another family cannot see our data ─────────
 const reg2 = await api("POST", "/api/auth/register", {
     as: "out@test.dev",

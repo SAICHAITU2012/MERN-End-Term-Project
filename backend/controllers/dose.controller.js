@@ -34,7 +34,12 @@ export const getDosesForDay = async (req, res, next) => {
             : todayLabel;
 
         const query = { family: req.user.family, dateLabel };
-        if (req.query.memberId) query.member = req.query.memberId;
+        // member accounts are scoped to their own doses; caregivers see everyone
+        if (req.user.role === "member" && req.user.linkedMember) {
+            query.member = req.user.linkedMember;
+        } else if (req.query.memberId) {
+            query.member = req.query.memberId;
+        }
 
         const doses = await populateDose(
             DoseEvent.find(query).sort({ timeLabel: 1 })
@@ -54,7 +59,11 @@ export const getDoseHistory = async (req, res, next) => {
         const limit = Math.min(100, Number(req.query.limit) || 30);
 
         const query = { family: req.user.family };
-        if (memberId) query.member = memberId;
+        if (req.user.role === "member" && req.user.linkedMember) {
+            query.member = req.user.linkedMember;
+        } else if (memberId) {
+            query.member = memberId;
+        }
         if (from || to) {
             query.dateLabel = {};
             if (from) query.dateLabel.$gte = from;

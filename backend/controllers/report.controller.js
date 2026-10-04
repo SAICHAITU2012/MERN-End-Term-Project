@@ -22,6 +22,10 @@ const pct = (taken, total) => (total === 0 ? null : Math.round((taken / total) *
 export const getMemberReport = async (req, res, next) => {
     try {
         const { memberId } = req.params;
+        // members may only read their own report
+        if (req.user.role === "member" && String(req.user.linkedMember) !== memberId) {
+            return fail(res, 403, "You can only view your own report");
+        }
         const member = await Member.findOne({
             _id: memberId,
             family: req.user.family,
