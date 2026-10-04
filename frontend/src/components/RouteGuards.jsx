@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import { PillIcon } from "./icons.jsx";
 
@@ -15,6 +15,7 @@ export function FullPageLoader() {
 
 export function ProtectedRoute({ children, caregiver = false, member = false }) {
     const { user, loading, onboardingNeeded } = useAuth();
+    const location = useLocation();
     if (loading) return <FullPageLoader />;
     if (!user) return <Navigate to="/login" replace />;
     if (caregiver && user.role !== "caregiver") return <Navigate to="/my-meds" replace />;
