@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# environment secrets
+.env
+.env.local
+.env.production
+
+# builds
+frontend/dist/
+dist/
+
+# uploads (user content)
+backend/uploads/
+
+# OS / editor
+.DS_Store
+*.log
+__MACOSX/
