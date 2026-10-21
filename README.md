@@ -70,6 +70,8 @@ One family circle, four automatic loops:
 - **Medication manager**: dose times, days-of-week, dosage form, instructions,
   stock + threshold, stop/resume (future doses cancel cleanly)
 - **Member self-view** — large-touch "My Medicines" screen with browser notifications
+- **Demo control room** — `POST /api/demo/tick` drives a real reminder or a forced
+  escalation on demand, so missed-dose alerting can be shown live in the demo video
 - **Adherence reports** — heatmap, per-medication bars, best/worst insight,
   streaks, print/PDF for doctor visits
 - **Invite system** — caregivers join via a family invite code

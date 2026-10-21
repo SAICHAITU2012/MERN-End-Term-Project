@@ -8,7 +8,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "seed": "node scripts/seed.js",
-    "smoke": "node scripts/smokeTest.mjs"
+    "smoke": "node scripts/smokeTest.mjs",
+    "atlas-check": "node scripts/atlasCheck.mjs"
   },
   "author": "",
   "license": "ISC",

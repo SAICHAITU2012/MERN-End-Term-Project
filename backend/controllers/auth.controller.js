@@ -108,7 +108,6 @@ export const logoutUser = async (req, res) => {
 
 // GET /api/auth/me
 export const getMe = async (req, res) => {
-    const Family = (await import("../models/family.model.js")).default;
     const family = await Family.findById(req.user.family).lean();
     const memberCount = await Member.countDocuments({ family: req.user.family, active: true });
     res.status(200).json({

@@ -100,6 +100,10 @@ export const updateMedication = async (req, res, next) => {
         for (const field of editable) {
             if (req.body[field] !== undefined) medication[field] = req.body[field];
         }
+        // an empty daysOfWeek would make the schedule never fire — treat as daily
+        if (Array.isArray(medication.daysOfWeek) && medication.daysOfWeek.length === 0) {
+            medication.daysOfWeek = [0, 1, 2, 3, 4, 5, 6];
+        }
 
         // refilling stock clears the low-stock alert flag
         if (req.body.stockCount !== undefined) {

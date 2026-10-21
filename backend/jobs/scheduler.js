@@ -69,7 +69,9 @@ export const tick = async () => {
                     const scheduledFor = zonedToUtc(dateLabel, slot, family.timezone);
                     // a medication added mid-day doesn't owe earlier slots
                     if (scheduledFor.getTime() < createdSince) continue;
-                    if (med.endDate && new Date(med.endDate) < scheduledFor) continue;
+                    // endDate is an inclusive calendar day (stored as UTC
+                    // midnight) — stop once the family-local date passes it
+                    if (med.endDate && med.endDate.toISOString().slice(0, 10) < dateLabel) continue;
 
                     const created = await DoseEvent.create({
                         family: family._id,
@@ -188,11 +190,15 @@ const postWeeklyDigest = async (family, weekKey) => {
 };
 
 let task = null;
+let ticking = false;
 
 export const startScheduler = () => {
     if (task) return task;
     // every minute
     task = cron.schedule("* * * * *", async () => {
+        // a slow tick must never overlap the next one
+        if (ticking) return;
+        ticking = true;
         try {
             const r = await tick();
             if (r.dosesCreated || r.escalated || r.digests) {
@@ -200,10 +206,17 @@ export const startScheduler = () => {
             }
         } catch (error) {
             console.error("[scheduler] tick crashed:", error);
+        } finally {
+            ticking = false;
         }
     });
     console.log("[scheduler] started — ticking every minute");
     return task;
+};
+
+export const stopScheduler = () => {
+    if (task) task.stop();
+    task = null;
 };
 
 export default startScheduler;

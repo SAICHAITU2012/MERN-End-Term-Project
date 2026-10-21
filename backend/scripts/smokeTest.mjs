@@ -242,6 +242,16 @@ const foreignTaken = await api("PATCH", `/api/doses/${escalDose._id}/taken`, { a
 assert.equal(foreignTaken.status, 404);
 step("cross-family access blocked (family scoping)");
 
+// demo tick: normal run + forced escalation
+const demoTick = await api("POST", "/api/demo/tick", { as: "cg@test.dev", body: {} });
+assert.equal(demoTick.status, 200, JSON.stringify(demoTick.data));
+const demoForce = await api("POST", "/api/demo/tick", { as: "cg@test.dev", body: { forceEscalate: true } });
+assert.equal(demoForce.status, 200);
+assert.ok(demoForce.data.escalated >= 0);
+const notifsAfterDemo = await api("GET", "/api/notifications", { as: "cg@test.dev" });
+assert.ok(notifsAfterDemo.data.notifications.length > 0);
+step("demo tick API runs + forced escalation notifies caregivers");
+
 // logout clears the session
 const out = await api("POST", "/api/auth/logout", { as: "out@test.dev" });
 const meAfter = await api("GET", "/api/auth/me", { as: "out@test.dev" });

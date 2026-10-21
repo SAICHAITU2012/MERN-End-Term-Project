@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import api from "../api/axios.js";
+import { useToast } from "../components/Toast.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 import DoseCard from "../components/DoseCard.jsx";
 import AdherenceRing from "../components/AdherenceRing.jsx";
@@ -17,6 +18,20 @@ const greeting = () => {
 
 export default function Dashboard() {
     const { user, family } = useAuth();
+    const toast = useToast();
+    const [busyDemo, setBusyDemo] = useState(false);
+
+    const simulate = async (force) => {
+        setBusyDemo(true);
+        try {
+            const { data } = await api.post("/api/demo/tick", { forceEscalate: force });
+            toast(force ? `Escalation complete — ${data.escalated} dose(s) escalated, caregivers alerted 🚨` : "Reminder tick complete — due doses are live ⏰");
+        } catch (err) {
+            toast(err.friendly || "Demo tick failed", "error");
+        } finally {
+            setBusyDemo(false);
+        }
+    };
     const { doses, todayLabel, status, error } = useSelector((s) => s.schedule);
     const [summaries, setSummaries] = useState([]);
     const [meds, setMeds] = useState([]);
@@ -69,7 +84,23 @@ export default function Dashboard() {
                             {pending.length > 0 ? `${pending.length} dose${pending.length === 1 ? "" : "s"} left today` : "all doses handled today 🎉"}
                         </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
+                        <button
+                            onClick={() => simulate(false)}
+                            disabled={busyDemo}
+                            className="btn-shine rounded-2xl bg-gradient-to-r from-amber-400 to-orange-400 px-4 py-2.5 text-sm font-extrabold text-amber-950 shadow-sm transition hover:brightness-110 disabled:opacity-60"
+                            title="Runs the real scheduler tick — materialises any due doses now"
+                        >
+                            ⏰ Simulate reminder
+                        </button>
+                        <button
+                            onClick={() => simulate(true)}
+                            disabled={busyDemo}
+                            className="btn-shine rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 px-4 py-2.5 text-sm font-extrabold text-white shadow-sm transition hover:brightness-110 disabled:opacity-60"
+                            title="Marks every pending dose missed and alerts caregivers now"
+                        >
+                            🚨 Simulate escalation
+                        </button>
                         <Link to="/medications" className="rounded-2xl glass-dark px-4 py-2.5 text-sm font-bold text-white transition hover:bg-white/20">
                             💊 Medications
                         </Link>

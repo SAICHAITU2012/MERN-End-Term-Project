@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { motion } from "framer-motion";
 import { fetchToday } from "../redux/scheduleSlice.js";
 import { useAuth } from "../context/AuthContext.jsx";
 import ThreeBackground from "../components/ThreeBackground.jsx";
@@ -10,7 +11,7 @@ import Avatar from "../components/Avatar.jsx";
 // designed to be usable by a 70-year-old on a phone.
 export default function MyMeds() {
     const dispatch = useDispatch();
-    const { doses, todayLabel, status } = useSelector((s) => s.schedule);
+    const { doses, todayLabel, status, error } = useSelector((s) => s.schedule);
     const { user, family } = useAuth();
 
     useEffect(() => {
@@ -88,7 +89,20 @@ export default function MyMeds() {
                         {[0, 1].map((i) => <div key={i} className="h-40 animate-pulse rounded-3xl bg-white/10" />)}
                     </div>
                 )}
-                {status !== "loading" && mine.length === 0 && (
+                {status === "failed" && (
+                    <div className="rounded-3xl bg-white p-10 text-center shadow-pop">
+                        <span className="text-5xl">📡</span>
+                        <p className="mt-3 font-display text-lg font-extrabold">Couldn't load your doses</p>
+                        <p className="mt-1 text-sm text-stone-500">{error || "Please check your connection and try again."}</p>
+                        <button
+                            onClick={() => dispatch(fetchToday())}
+                            className="mt-4 rounded-xl bg-brand-600 px-5 py-2.5 text-sm font-extrabold text-white shadow-pop transition hover:brightness-110"
+                        >
+                            Retry
+                        </button>
+                    </div>
+                )}
+                {status !== "loading" && status !== "failed" && mine.length === 0 && (
                     <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
                         className="rounded-3xl bg-white p-10 text-center shadow-pop">
                         <span className="text-5xl">🌤️</span>

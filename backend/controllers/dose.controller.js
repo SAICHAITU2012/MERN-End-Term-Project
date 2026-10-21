@@ -207,9 +207,31 @@ export const snoozeDose = async (req, res, next) => {
         if (!family) return fail(res, 404, "Family not found");
 
         dose.snoozeCount += 1;
-        dose.timeLabel = addMinutesToLabel(dose.timeLabel, SNOOZE_MINUTES);
-        dose.scheduledFor = zonedToUtc(dose.dateLabel, dose.timeLabel, family.timezone);
-        await dose.save();
+        const nextLabel = addMinutesToLabel(dose.timeLabel, SNOOZE_MINUTES);
+        // snoozing past midnight rolls the dose into the next calendar day
+        let nextDate = dose.dateLabel;
+        let nextScheduled = zonedToUtc(nextDate, nextLabel, family.timezone);
+        if (nextScheduled.getTime() <= dose.scheduledFor.getTime()) {
+            nextDate = new Date(Date.parse(`${nextDate}T12:00:00Z`) + 86400000)
+                .toISOString()
+                .slice(0, 10);
+            nextScheduled = zonedToUtc(nextDate, nextLabel, family.timezone);
+        }
+        dose.timeLabel = nextLabel;
+        dose.dateLabel = nextDate;
+        dose.scheduledFor = nextScheduled;
+        try {
+            await dose.save();
+        } catch (err) {
+            // another dose of the same medication already owns that slot —
+            // keep the original label and only push the reminder time
+            if (err.code !== 11000) throw err;
+            const prev = await DoseEvent.findById(dose._id);
+            dose.timeLabel = prev.timeLabel;
+            dose.dateLabel = prev.dateLabel;
+            dose.scheduledFor = nextScheduled;
+            await dose.save();
+        }
 
         const populated = await populateDose(DoseEvent.findById(dose._id)).lean();
         res.status(200).json({ dose: populated });
