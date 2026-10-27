@@ -1,0 +1,15 @@
+[build]
+  # install dev deps explicitly: NODE_ENV=production would otherwise omit vite
+  command = "npm install --include=dev && npm run build"
+  publish = "dist"
+
+[build.environment]
+  # NODE_ENV=production is set for the Render backend; without this npm would
+  # skip devDependencies (vite, tailwind) and the frontend build would fail
+  NPM_CONFIG_INCLUDE = "dev"
+
+# client-side routing: serve index.html for any unknown path
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
