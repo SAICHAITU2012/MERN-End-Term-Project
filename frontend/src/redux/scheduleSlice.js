@@ -34,6 +34,10 @@ const scheduleSlice = createSlice({
         clearSchedule(state) {
             state.doses = [];
             state.dateLabel = null;
+            state.todayLabel = null;
+            state.status = "idle";
+            state.error = null;
+            state.lastFetched = null;
         },
     },
     extraReducers: (builder) => {

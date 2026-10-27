@@ -80,6 +80,9 @@ export default function Layout() {
                     </span>
 
                     <div className="ml-auto flex items-center gap-2">
+                        <button onClick={doLogout} className="rounded-xl border border-stone-200 px-3 py-2 text-xs font-extrabold text-stone-600 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-700 sm:px-3.5 sm:text-sm" aria-label="Log out">
+                            <span aria-hidden="true">↗</span><span className="ml-1">Log out</span>
+                        </button>
                         <div className="relative">
                             <button
                                 onClick={() => {

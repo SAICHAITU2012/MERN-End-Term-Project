@@ -81,7 +81,7 @@ export default function Dashboard() {
                         </h1>
                         <p className="mt-2 font-semibold text-brand-100/85">
                             {dateLabelPretty} · {family?.timezone?.replace("_", " ")} ·{" "}
-                            {pending.length > 0 ? `${pending.length} dose${pending.length === 1 ? "" : "s"} left today` : "all doses handled today 🎉"}
+                            {pending.length > 0 ? `${pending.length} dose${pending.length === 1 ? "" : "s"} left today` : missed.length > 0 ? `${missed.length} missed · caregivers alerted` : "all doses handled today 🎉"}
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-2">

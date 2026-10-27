@@ -13,6 +13,11 @@ import Medications from "./pages/Medications.jsx";
 import Reports from "./pages/Reports.jsx";
 import Notifications from "./pages/Notifications.jsx";
 import Settings from "./pages/Settings.jsx";
+import MemberLayout from "./components/MemberLayout.jsx";
+import MyMedicines from "./pages/MyMedicines.jsx";
+import MemberHistory from "./pages/MemberHistory.jsx";
+import MemberProgress from "./pages/MemberProgress.jsx";
+import MemberNotifications from "./pages/MemberNotifications.jsx";
 
 export default function App() {
     return (
@@ -34,8 +39,14 @@ export default function App() {
                 <Route path="/settings" element={<Settings />} />
             </Route>
 
-            {/* member self-view — large, focused, no sidebar */}
-            <Route path="/my-meds" element={<ProtectedRoute member><MyMeds /></ProtectedRoute>} />
+            {/* member workspace: accessible, touch-friendly navigation and self-service views */}
+            <Route element={<ProtectedRoute member><MemberLayout /></ProtectedRoute>}>
+                <Route path="/my-meds" element={<MyMeds />} />
+                <Route path="/my-meds/medicines" element={<MyMedicines />} />
+                <Route path="/my-meds/history" element={<MemberHistory />} />
+                <Route path="/my-meds/progress" element={<MemberProgress />} />
+                <Route path="/my-meds/alerts" element={<MemberNotifications />} />
+            </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

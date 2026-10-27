@@ -1,9 +1,13 @@
 import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { useDispatch } from "react-redux";
 import api from "../api/axios.js";
+import { clearSchedule } from "../redux/scheduleSlice.js";
+import { clearNotifications } from "../redux/notificationSlice.js";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
+    const dispatch = useDispatch();
     const [user, setUser] = useState(null);
     const [family, setFamily] = useState(null);
     const [onboardingNeeded, setOnboardingNeeded] = useState(false);
@@ -28,21 +32,36 @@ export function AuthProvider({ children }) {
     }, [refresh]);
 
     const login = async (email, password) => {
+        dispatch(clearSchedule());
+        dispatch(clearNotifications());
         const { data } = await api.post("/api/auth/login", { email, password });
         const me = await refresh();
         return me || data;
     };
 
     const register = async (payload) => {
+        dispatch(clearSchedule());
+        dispatch(clearNotifications());
         const { data } = await api.post("/api/auth/register", payload);
         const me = await refresh();
         return me || data;
     };
 
     const logout = async () => {
-        await api.post("/api/auth/logout");
+        // Clear the client session immediately so a slow or unavailable API
+        // cannot leave the user trapped on a protected screen.
         setUser(null);
         setFamily(null);
+        setOnboardingNeeded(false);
+        dispatch(clearSchedule());
+        dispatch(clearNotifications());
+        try {
+            await api.post("/api/auth/logout");
+        } catch {
+            // The cookie is httpOnly and can only be cleared by the API. The
+            // local app still exits; the next auth refresh will report if the
+            // server could not clear the cookie.
+        }
     };
 
     const updateUser = (u) => setUser(u);

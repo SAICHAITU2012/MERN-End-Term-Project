@@ -17,7 +17,13 @@ const findFamilyMedication = async (req) =>
 export const getMedications = async (req, res, next) => {
     try {
         const query = { family: req.user.family };
-        if (req.query.memberId) query.member = req.query.memberId;
+        // A member can never widen their view by supplying another memberId.
+        if (req.user.role === "member") {
+            if (!req.user.linkedMember) return res.status(200).json({ medications: [] });
+            query.member = req.user.linkedMember;
+        } else if (req.query.memberId) {
+            query.member = req.query.memberId;
+        }
         if (req.query.active === "true") query.active = true;
         if (req.query.active === "false") query.active = false;
 

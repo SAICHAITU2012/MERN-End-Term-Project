@@ -69,7 +69,8 @@ One family circle, four automatic loops:
   missed-dose strip, refill alerts, 7-day adherence rings per member
 - **Medication manager**: dose times, days-of-week, dosage form, instructions,
   stock + threshold, stop/resume (future doses cancel cleanly)
-- **Member self-view** — large-touch "My Medicines" screen with browser notifications
+- **Member workspace** — touch-friendly Today, My Medicines, Dose History, My Progress, and Alerts views with quick navigation, daily completion progress, and browser reminders
+- **Member privacy** — medicine, dose, report, and notification reads stay scoped to the signed-in member
 - **Demo control room** — `POST /api/demo/tick` drives a real reminder or a forced
   escalation on demand, so missed-dose alerting can be shown live in the demo video
 - **Adherence reports** — heatmap, per-medication bars, best/worst insight,
@@ -86,7 +87,7 @@ One family circle, four automatic loops:
 | Frontend | **React 19**, **Vite**, **Redux Toolkit** (@reduxjs/toolkit) for live schedule + notification state, **axios** with credentials, **React Router 7**, **Tailwind CSS 4** |
 | Files | Multer uploads; Cloudinary when configured, local `/uploads` fallback |
 | Email (optional) | Nodemailer |
-| Testing | 21-check end-to-end smoke suite on in-memory MongoDB (`npm run smoke`) |
+| Testing | 22-check end-to-end smoke suite on in-memory MongoDB (`npm run smoke`) |
 
 ## Architecture
 
@@ -117,7 +118,9 @@ medmate/
         │                        # DoseCard, MedForm, AdherenceRing, guards…
         └── pages/               # Landing, Login, Register, Onboarding,
                                  # Dashboard, MyMeds, MemberDetail,
-                                 # Medications, Reports, Notifications, Settings
+                                 # MyMedicines, MemberHistory, MemberProgress,
+                                 # MemberNotifications, Medications, Reports,
+                                 # Notifications, Settings
 ```
 
 **Key engineering decisions**
@@ -188,6 +191,10 @@ The reference deployment splits the two apps:
 *(Deployment links are added here once the final hosting is wired up.)*
 
 ## Demo Script (3–5 min)
+
+### Demo Video
+
+[Watch the MedMate project demo on Google Drive](https://drive.google.com/file/d/10QTTLiR-5CQHFBIZikL-uuMphpqL8dY-/view?usp=sharing)
 
 1. Landing page — the problem in one sentence (0:00)
 2. Log in as Priya (caregiver): dashboard with today's timeline, refill alert,
