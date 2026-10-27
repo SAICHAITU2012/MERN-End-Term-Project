@@ -177,18 +177,22 @@ Secrets are never committed; `.env` is git-ignored.
 
 ## Deployment
 
-The reference deployment splits the two apps:
+### Live application
+
+- **Frontend:** [https://mernendtermproject.netlify.app](https://mernendtermproject.netlify.app)
+- **Backend API:** [https://medmate-api-2qo5.onrender.com](https://medmate-api-2qo5.onrender.com)
+- **API health check:** [https://medmate-api-2qo5.onrender.com/api/health](https://medmate-api-2qo5.onrender.com/api/health)
+
+The deployed application splits the two apps:
 
 - **MongoDB Atlas** — free M0 cluster
 - **Backend → Render** — new Web Service from the repo, root dir `backend`,
   start command `npm start`, env vars from `.env.example` with `NODE_ENV=production`,
-  `CLIENT_URL=https://your-frontend.vercel.app` and the Atlas `MONGO_URI`.
+  `CLIENT_URL=https://mernendtermproject.netlify.app` and the Atlas `MONGO_URI`.
   The cookie is sent `sameSite: none; secure: true` in production, which works
-  cross-domain (Render API + Vercel frontend).
-- **Frontend → Vercel** — root dir `frontend`, framework Vite, env var
-  `VITE_API_URL=https://your-backend.onrender.com`.
-
-*(Deployment links are added here once the final hosting is wired up.)*
+  cross-domain (Render API + Netlify frontend).
+- **Frontend → Netlify** — built from the repository root using `netlify.toml`;
+  `VITE_API_URL=https://medmate-api-2qo5.onrender.com` points it to the backend.
 
 ## Demo Script (3–5 min)
 
