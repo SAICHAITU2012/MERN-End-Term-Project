@@ -25,6 +25,12 @@ app.use(
         origin: (origin, cb) => {
             // same-origin / no-origin (curl, mobile, Vite-proxied dev requests)
             if (!origin || origin === process.env.CLIENT_URL) return cb(null, true);
+            // Netlify deploy previews / branch deploys of the CLIENT_URL site
+            // (https://<anything>--<site>.netlify.app)
+            const clientHost = process.env.CLIENT_URL?.match(/^https:\/\/([a-z0-9-]+\.netlify\.app)\/?$/)?.[1];
+            if (clientHost && origin.endsWith(`--${clientHost}`) && /^https:\/\/[a-z0-9-]+--/.test(origin)) {
+                return cb(null, true);
+            }
             // dev: Vite may land on any free port (5173 busy → 5174), so any
             // localhost origin is fine outside production
             if (
